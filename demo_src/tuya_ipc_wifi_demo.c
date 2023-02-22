@@ -82,7 +82,7 @@ OPERATE_RET tuya_adapter_wifi_station_connect(IN CONST CHAR_T *ssid,IN CONST CHA
     // snprintf(cmdName, sizeof(cmdName), "touch /etc/wpa_supplicant/%s.conf", *ssid);
     // exec_cmd(cmdName);
 
-    exec_cmd("killall -9 wpa_supplicant; killall -9 dhclient");
+    exec_cmd("killall -9 wpa_supplicant; killall -9 dhclient; killall udhcpd");
     // exec_cmd("killall -9 wpa_supplicant");
     snprintf(cmdName, sizeof(cmdName), "sudo wpa_passphrase %s %s > /etc/wpa_supplicant/%s.conf", ssid, passwd, ssid);
     exec_cmd(cmdName);
@@ -487,32 +487,20 @@ static OPERATE_RET hwl_get_local_ip_info(char *interface,OUT NW_IP_S *ip)
     memset(tmp, 0, sizeof(tmp));
     while (fgets(tmp, sizeof(tmp), pp) != NULL)
     {
-        char *pIPStart = strstr(tmp, "inet addr:");
-        if(pIPStart != NULL)
-        {/* It's all a line containing IP GW mask that jumps out directly  */
-            break;
-        }
-    }
-    
-    {
         /* finding ip  */
-        char *pIPStart = strstr(tmp, "inet addr:");
+        char *pIPStart = strstr(tmp, "inet ");
         if(pIPStart != NULL)
         {
-            sscanf(pIPStart + strlen("inet addr:"), "%15s", ip->ip);
+            sscanf(pIPStart + strlen("inet "), "%15s", ip->ip);
         }
-    }
-    
-    {
+
         /* finding gw  */
         char *pGWStart = strstr(tmp, "broadcast ");
         if(pGWStart != NULL)
         {
             sscanf(pGWStart + strlen("broadcast "), "%s", ip->gw);
         }
-    }
-    
-    {
+
         /* finding mask */
         char *pMASKStart = strstr(tmp, "netmask ");
         if(pMASKStart != NULL)
@@ -520,6 +508,13 @@ static OPERATE_RET hwl_get_local_ip_info(char *interface,OUT NW_IP_S *ip)
             sscanf(pMASKStart + strlen("netmask "), "%s", ip->mask);
         }
     }
+    // {
+    //     char *pIPStart = strstr(tmp, "inet addr:");
+    //     if(pIPStart != NULL)
+    //     {/* It's all a line containing IP GW mask that jumps out directly  */
+    //         break;
+    //     }
+    // }
     
     pclose(pp);
 
