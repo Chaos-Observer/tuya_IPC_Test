@@ -51,13 +51,14 @@ extern "C" {
 #define GW_ROKIDK18     6
 
 /* custom settings */
-#define BUILD_DATE    "2022_08_15"
-#define BUILD_TIME    "15_41_33"
+#define BUILD_DATE    "2023_03_08"
+#define BUILD_TIME    "09_48_29"
 #define GIT_USER    "ci_manage"
-#define IOT_SDK_VER    "5.3.26"
+#define IOT_SDK_VER    "5.3.33"
+#define SDK_BETA_VER    "beta.13"
 #define PROJECT_NAME    "ty_ipc_wr_wl_linux_sdk"
 #define TARGET_PLATFORM    "aarch64-buildroot-linux-gnu"
-#define SDK_ID    "TuyaOS2.3.2_ty_ipc_wr_wl_linux_sdk_5.3.26_aarch64-buildroot-linux-gnu_wifi_fs_0.0.3"
+#define SDK_ID    "TuyaOS2.3.2_ty_ipc_wr_wl_linux_sdk_5.3.33-beta.13_aarch64-buildroot-linux-gnu_wifi_fs_0.0.3"
 #define ENABLE_BASE_IOT_CONFIG 1
 #define TUYA_IOT_DEBUG 1
 #define ENABLE_LAN_ENCRYPTION 1

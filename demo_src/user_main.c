@@ -536,8 +536,12 @@ int main(int argc, char *argv[])
         return ret;
     }
 
-    IPC_APP_Init_Media_Task();
+
+    gst_media_pipeline();
+    
+    // IPC_APP_Init_Media_Task();
     TUYA_APP_Enable_Motion_Detect();
+
 
     /* whether SDK is connected to MQTT */
     while(IPC_APP_Get_MqttStatus() != 1)

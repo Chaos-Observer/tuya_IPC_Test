@@ -11,7 +11,9 @@ SRC_DIR = demo_src
 SDK_DIR = sdk
 
 LINKFLAGS = \
-	-L$(ROOT_DIR)/$(SDK_DIR)/lib -ltuya_iot -lpthread -lrt -ldl -lm -Wl,--gc-sections
+	-L$(ROOT_DIR)/$(SDK_DIR)/lib -ltuya_iot -lpthread -lrt -ldl -lm \
+	-L/usr/lib/aarch64-linux-gnu/gstreamer-1.0 -lgstreamer-1.0 -lgstcoreelements -lgstapp -lgstrockchipmpp -lgstvideo4linux2 -lgstalsa -lgstvideorate -lgstvideoscale \
+	-L/usr/lib/aarch64-linux-gnu/glib-2.0/lib -lgobject-2.0 -lglib-2.0 -Wl,--gc-sections
 	
 CCFLAGS = \
 	-g 
@@ -28,7 +30,7 @@ SDK_INC_BASE_DIR = $(ROOT_DIR)/$(SDK_DIR)/include
 SDK_INCS =  $(addprefix -I ,  $(shell find $(SDK_INC_BASE_DIR) -type d) )
 
 USER_SRC_BASE_DIR 	=  $(ROOT_DIR)/demo_src
-USER_INC_BASE_DIR 	= $(ROOT_DIR)/demo_include
+USER_INC_BASE_DIR 	+= $(ROOT_DIR)/demo_include /usr/include/gstreamer-1.0 /usr/include/glib-2.0 /usr/lib/aarch64-linux-gnu/glib-2.0/include
 
 USER_SRC_DIRS = $(shell find $(USER_SRC_BASE_DIR) -type d)
 USER_SRCS += $(foreach dir, $(USER_SRC_DIRS), $(wildcard $(dir)/*.c)) 

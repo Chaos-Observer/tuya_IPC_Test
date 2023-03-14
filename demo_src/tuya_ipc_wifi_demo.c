@@ -91,16 +91,16 @@ OPERATE_RET tuya_adapter_wifi_station_connect(IN CONST CHAR_T *ssid,IN CONST CHA
     snprintf(cmdName, sizeof(cmdName), "sudo wpa_supplicant -D nl80211 -i %s -c /etc/wpa_supplicant/%s.conf -B", WLAN_DEV, ssid);
     exec_cmd(cmdName);
 
-    sleep(2);
+    // sleep(2);
 
     memset(cmdName, 0, sizeof(cmdName));
-    snprintf(cmdName, sizeof(cmdName), "sudo dhclient %s", WLAN_DEV);
+    snprintf(cmdName, sizeof(cmdName), "sudo service NetworkManager restart && sudo dhclient %s", WLAN_DEV);
     exec_cmd(cmdName);
 
     //TODO
     //Add a blocking operation for the wifi connection here.
 
-    sleep(2);
+    // sleep(2);
 
     return OPRT_OK;
 }

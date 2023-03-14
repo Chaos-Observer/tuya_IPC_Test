@@ -183,6 +183,13 @@ OPERATE_RET tuya_ipc_set_dns_cache_priority(IN CONST INT_T priority);
  */
 OPERATE_RET tuya_ipc_direct_connect(IN CONST CHAR_T *p_str, IN CONST TUYA_IPC_DIRECT_CONNECT_TYPE_E source);
 
+/**
+ * \fn OPERATE_RET tuya_ipc_set_permit_mqtt_connect(IN BOOL_T permit)
+ * \brief use this API to enable/disable mqtt connect
+ * \param[in] permit: disable mqtt connect if permit is FALSE
+ * \return OPERATE_RET
+ */
+OPERATE_RET tuya_ipc_set_permit_mqtt_connect(IN BOOL_T permit);
 
 #ifdef __cplusplus
 }
