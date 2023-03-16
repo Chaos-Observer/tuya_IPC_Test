@@ -79,7 +79,7 @@ static GstFlowReturn video_new_sample_cb(GstElement *sink, gpointer user_data){
         // read_one_frame_from_map(map.data, offset, map.size, &IsKeyFrame, &FrameLen, &Frame_start);
 
         unsigned char NalType = map.data[4] & 0x1f;
-        if(NalType == 0x7 || NalType == 0x5)  // 0x67 0x65
+        if(NalType == 0x7)  // 0x67
         {
             h264_frame.type = E_VIDEO_I_FRAME;
             // printf ("this is key frame ,FrameLen is %d. ",map.size);
@@ -329,7 +329,7 @@ int *gst_media_pipeline_video()
 
     string =
       g_strdup_printf
-      ("v4l2src device=/dev/v4l/by-id/%s ! videorate ! capsfilter caps=\"video/x-raw,width=1280,height=720,framerate=30/1\" ! videoscale ! capsfilter caps=\"%s\" ! mpph264enc rc-mode=0 bps-max=512000 gop=30 ! h264parse ! capsfilter caps=\"video/x-h264, alignment=nal, stream-format=byte-stream\" ! appsink name=h264_sink",
+      ("v4l2src device=/dev/v4l/by-id/%s ! videorate ! capsfilter caps=\"video/x-raw,width=1280,height=720,framerate=30/1\" ! videoscale ! capsfilter caps=\"%s\" ! mpph264enc header-mode=each-idr rc-mode=0 bps-max=512000 gop=30 ! capsfilter caps=\"video/x-h264, stream-format=byte-stream\" ! appsink name=h264_sink",
       device_name, caps);
 
     pipeline = gst_parse_launch (string, NULL);
@@ -774,6 +774,8 @@ void *thread_live_video(void *arg)
         {
             offset=0;
         }
+        printf("video-file date is %02X %02X %02X %02X %02X %02X. ", *(pVideoBuf+offset), *(pVideoBuf+offset+1), *(pVideoBuf+offset+2), *(pVideoBuf+offset+3), *(pVideoBuf+offset+4), *(pVideoBuf+offset+5));
+
         read_one_frame_from_demo_video_file(pVideoBuf+offset,offset,file_size-offset,&IsKeyFrame,&FrameLen,&Frame_start);
         //Note: For I frame of H264, SPS/PPS/SEI/IDR should be combined within one frame, and the NALU separator should NOT be deleted.
         if(IsKeyFrame==1)
@@ -786,6 +788,7 @@ void *thread_live_video(void *arg)
             h264_frame.type = E_VIDEO_PB_FRAME;
             h264_frame.size = FrameLen;
         }
+        printf("size is %d .\n",h264_frame.size);
 
         int frameRate = 30;
         int sleepTick = 1000000/frameRate;
