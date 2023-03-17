@@ -176,15 +176,6 @@ OPERATE_RET tuya_ipc_ring_buffer_hook_mem(RING_BUFFER_MALLOC_FUNC malloc_func, R
  */
 OPERATE_RET tuya_ipc_ring_buffer_correct_timestamp(INT_T device, INT_T channel, IPC_STREAM_E stream, UINT_T frameIntervalMs, BOOL_T correctAll);
 
-/**
- * @brief get lastest timestamp of ringbuffer
- * 
- * @param device device number, 0 for ipc
- * @param channel  channel number, 0 for ipc
- * @param stream stream type
- * @return return latest timestamp. 0 is on error.
- */
-UINT64_T tuya_ipc_ring_buffer_get_lastest_timestamp(INT_T device, INT_T channel, IPC_STREAM_E stream);
 #ifdef __cplusplus
 }
 #endif

@@ -75,20 +75,6 @@ typedef enum {
     tuya_p2p_rtc_upnp_port_protocol_tcp
 }tuya_p2p_rtc_upnp_port_protocol;
 
-#define TUYA_P2P_UPNP_ADDRESS_LENGTH    16    //IP地址长度
-#define TUYA_P2P_UPNP_PROTOCOL_LENGTH   4     //协议长度 tcp or udp
-
-typedef struct _tuya_p2p_rtc_upnp_port_link_t {
-    char protocol[TUYA_P2P_UPNP_PROTOCOL_LENGTH];
-    int  external_port;
-    char remount_host[TUYA_P2P_UPNP_ADDRESS_LENGTH];
-    int  internal_port;
-    char internal_client[TUYA_P2P_UPNP_ADDRESS_LENGTH];
-    int  route_level;
-    int  index;
-    struct _tuya_p2p_rtc_upnp_port_link_t* next;
-}tuya_p2p_rtc_upnp_port_link_t;
-
 typedef struct tuya_p2p_rtc_audio_codec {
     char name[64];
     int sample_rate;
@@ -167,7 +153,6 @@ typedef int (*tuya_p2p_rtc_aes_decrypt_cb_t)(void *handle, int length, char *iv,
 typedef int (*tuya_p2p_rtc_upnp_alloc_port_cb_t)(tuya_p2p_rtc_upnp_port_protocol protocol, int *local_port, char *address, int *port);
 typedef int (*tuya_p2p_rtc_upnp_release_port_cb_t)(tuya_p2p_rtc_upnp_port_protocol protocol, int local_port);
 typedef int (*tuya_p2p_rtc_upnp_bind_result_cb_t)(tuya_p2p_rtc_upnp_port_protocol protocol, int local_port, int error_code);
-typedef tuya_p2p_rtc_upnp_port_link_t* (*tuya_p2p_rtc_upnp_request_port_list_cb_t)(tuya_p2p_rtc_upnp_port_protocol protocol, unsigned int port);
 
 typedef struct tuya_p2p_rtc_cb{
     tuya_p2p_rtc_signaling_cb_t on_signaling;       // 信令回调，应用层通过 mqtt 发送信令
@@ -184,10 +169,9 @@ typedef struct tuya_p2p_rtc_cb{
         tuya_p2p_rtc_aes_decrypt_cb_t on_decrypt;
     }aes;
     struct {
-        tuya_p2p_rtc_upnp_alloc_port_cb_t on_alloc;       //获取UPN映射的端口信息
-        tuya_p2p_rtc_upnp_release_port_cb_t on_release;   //释放UPNP映射的端口
-        tuya_p2p_rtc_upnp_bind_result_cb_t on_bind;       //将绑定映射端口结果回馈给UPNP模组
-        tuya_p2p_rtc_upnp_request_port_list_cb_t on_request_port_list; //获取多级路由映射的地址及端口信息
+        tuya_p2p_rtc_upnp_alloc_port_cb_t on_alloc;
+        tuya_p2p_rtc_upnp_release_port_cb_t on_release;
+        tuya_p2p_rtc_upnp_bind_result_cb_t on_bind;
     }upnp;
 }tuya_p2p_rtc_cb_t;
 

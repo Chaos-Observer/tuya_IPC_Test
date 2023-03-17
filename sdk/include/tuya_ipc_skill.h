@@ -22,7 +22,6 @@ typedef enum {
     TUYA_IPC_SKILL_DOORBELLSTG,
     TUYA_IPC_SKILL_P2P,
     TUYA_IPC_SKILL_PX,
-    TUYA_IPC_SKILL_UPNP,
 } TUYA_IPC_SKILL_E;
 
 typedef union {

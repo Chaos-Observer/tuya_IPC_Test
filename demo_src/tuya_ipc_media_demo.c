@@ -75,7 +75,7 @@ static GstFlowReturn video_new_sample_cb(GstElement *sink, gpointer user_data){
             printf ("appsink buffer data empty\n");
             return GST_FLOW_OK;
         }
-        printf("video rx map.date is %02X %02X %02X %02X %02X %02X. map.size is %d, map.maxsize is %d .", map.data[0], map.data[1], map.data[2], map.data[3], map.data[4], map.data[5], map.size, map.maxsize);
+        printf("video rx map.date is %02X %02X %02X %02X %02X %02X. map.size is %d, map.maxsize is %d.\n", map.data[0], map.data[1], map.data[2], map.data[3], map.data[4], map.data[5], map.size, map.maxsize);
         // read_one_frame_from_map(map.data, offset, map.size, &IsKeyFrame, &FrameLen, &Frame_start);
 
         unsigned char NalType = map.data[4] & 0x1f;
@@ -164,7 +164,7 @@ static GstFlowReturn audio_new_sample_cb(GstElement *sink, gpointer user_data){
             printf ("appsink buffer data empty\n");
             return GST_FLOW_OK;
         }
-        // printf("audio rx map.date is %02X %02X %02X %02X %02X %02X. map.size is %d, map.maxsize is %d .\n", map.data[0], map.data[1], map.data[2], map.data[3], map.data[4], map.data[5], map.size, map.maxsize);
+        printf("audio rx map.date is %d %d %d %d %d %d. map.size is %d, map.maxsize is %d .\n", map.data[0], map.data[1], map.data[2], map.data[3], map.data[4], map.data[5], map.size, map.maxsize);
 
         pcm_frame.type = E_AUDIO_FRAME;
         pcm_frame.size = map.size;
@@ -403,11 +403,11 @@ int *gst_media_pipeline_audio()
 
 /* Create the elements */
     device_name = g_strdup ("hw:Camera,0");
-    caps = g_strdup ("audio/x-raw,rate=8000,channels=1,width=16,depth=16");
+    caps = g_strdup ("audio/x-raw,format=S16LE,rate=8000,channels=1");
 
     string =
       g_strdup_printf
-      ("alsasrc device=\"%s\" ! capsfilter caps=\"%s\" ! appsink name=pcm_sink",
+      ("alsasrc device=\"%s\" blocksize=640 ! capsfilter caps=\"%s\" ! appsink name=pcm_sink",
       device_name, caps);
 
     pipeline = gst_parse_launch (string, NULL);
@@ -629,6 +629,7 @@ void *thread_live_audio(void *arg)
             rewind(aFp);
             continue;
         }
+        printf("audio-file date is %d %d %d %d %d %d. size is %d.\n", audioBuf[0], audioBuf[1], audioBuf[2], audioBuf[3], audioBuf[4], audioBuf[5], size);
         int frameRate = AUDIO_FPS;
         int sleepTick = 1000000/frameRate;
         static UINT64_T pts = 0;
@@ -774,7 +775,7 @@ void *thread_live_video(void *arg)
         {
             offset=0;
         }
-        printf("video-file date is %02X %02X %02X %02X %02X %02X. ", *(pVideoBuf+offset), *(pVideoBuf+offset+1), *(pVideoBuf+offset+2), *(pVideoBuf+offset+3), *(pVideoBuf+offset+4), *(pVideoBuf+offset+5));
+        // printf("video-file date is %02X %02X %02X %02X %02X %02X. ", *(pVideoBuf+offset), *(pVideoBuf+offset+1), *(pVideoBuf+offset+2), *(pVideoBuf+offset+3), *(pVideoBuf+offset+4), *(pVideoBuf+offset+5));
 
         read_one_frame_from_demo_video_file(pVideoBuf+offset,offset,file_size-offset,&IsKeyFrame,&FrameLen,&Frame_start);
         //Note: For I frame of H264, SPS/PPS/SEI/IDR should be combined within one frame, and the NALU separator should NOT be deleted.
@@ -788,7 +789,7 @@ void *thread_live_video(void *arg)
             h264_frame.type = E_VIDEO_PB_FRAME;
             h264_frame.size = FrameLen;
         }
-        printf("size is %d .\n",h264_frame.size);
+        // printf("size is %d .\n",h264_frame.size);
 
         int frameRate = 30;
         int sleepTick = 1000000/frameRate;
