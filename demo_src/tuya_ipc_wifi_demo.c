@@ -29,8 +29,8 @@
 #include "tuya_ipc_demo_default_cfg.h"
 #include "tuya_ipc_system_control_demo.h"
 
-// #define WLAN_DEV    "wlan0"
-#define WLAN_DEV    "wlx502b731418c0"
+#define WLAN_DEV    "wlan0"
+//#define WLAN_DEV    "wlx502b731418c0"
 
 
 #define MAX_AP_SEARCH 20
@@ -73,17 +73,19 @@ OPERATE_RET tuya_adapter_wifi_station_connect(IN CONST CHAR_T *ssid,IN CONST CHA
         //get bind info from ap / wifi-smart / qrcode
         printf("get wifi info ...\n");
     }
-
-    // tuya_adapter_wifi_set_work_mode(WWM_STATION);
-
+    
+    tuya_adapter_wifi_set_work_mode(WWM_STATION);
+    // exec_cmd("killall -9 wpa_supplicant; killall -9 dhclient; killall -9 hostapd; killall -9 udhcpd");
+    exec_cmd("sudo systemctl stop wpa_supplicant; sudo systemctl stop hostapd; sudo killall -9 wpa_supplicant; sudo killall -9 dhclient;sudo systemctl stop udhcpd");
+    exec_cmd("sudo systemctl stop NetworkManager; sudo systemctl restart networking");
+    
     char cmdName[128];
     memset(cmdName, 0, sizeof(cmdName));
 
-    // snprintf(cmdName, sizeof(cmdName), "touch /etc/wpa_supplicant/%s.conf", *ssid);
+    // snprintf(cmdName, sizeof(cmdName), "./setup_wifi.sh 3 %s %s %s",WLAN_DEV ,ssid ,passwd);
     // exec_cmd(cmdName);
 
-    exec_cmd("killall -9 wpa_supplicant; killall -9 dhclient; killall udhcpd");
-    // exec_cmd("killall -9 wpa_supplicant");
+    
     snprintf(cmdName, sizeof(cmdName), "sudo wpa_passphrase %s %s > /etc/wpa_supplicant/%s.conf", ssid, passwd, ssid);
     exec_cmd(cmdName);
 
@@ -91,10 +93,11 @@ OPERATE_RET tuya_adapter_wifi_station_connect(IN CONST CHAR_T *ssid,IN CONST CHA
     snprintf(cmdName, sizeof(cmdName), "sudo wpa_supplicant -D nl80211 -i %s -c /etc/wpa_supplicant/%s.conf -B", WLAN_DEV, ssid);
     exec_cmd(cmdName);
 
-    // sleep(2);
+    //  // sleep(2);
 
     memset(cmdName, 0, sizeof(cmdName));
-    snprintf(cmdName, sizeof(cmdName), "sudo service NetworkManager restart && sudo dhclient %s", WLAN_DEV);
+    snprintf(cmdName, sizeof(cmdName), "sudo systemctl restart networking && sudo dhclient %s",WLAN_DEV);
+    // snprintf(cmdName, sizeof(cmdName), "sudo systemctl start NetworkManager && sudo dhclient %s",WLAN_DEV);
     exec_cmd(cmdName);
 
     //TODO
@@ -984,7 +987,7 @@ OPERATE_RET tuya_adapter_wifi_ap_stop(VOID)
     printf("Stop AP \r\n");
 
     // exec_cmd("ifconfig " WLAN_DEV " down");
-    // exec_cmd("killall udhcpd; killall -9 hsotapd");
+    // exec_cmd("killall -9 udhcpd; killall -9 hsotapd; killall -9 ./wifi_ap_opt.sh");
     char cmdName[128];
     memset(cmdName, 0, sizeof(cmdName));
     snprintf(cmdName, sizeof(cmdName), "./wifi_ap_opt.sh stop %s &", WLAN_DEV);

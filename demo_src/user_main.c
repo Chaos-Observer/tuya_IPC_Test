@@ -315,8 +315,8 @@ OPERATE_RET TUYA_IPC_SDK_START(WIFI_INIT_MODE_E connect_mode, CHAR_T *p_token)
     /* substream(HD), video configuration */
     /* Please note that if the substream supports multiple video stream configurations, please set each item to the upper limit of the allowed configuration. */
     ipc_sdk_run_var.media_info.media_info.channel_enable[E_IPC_STREAM_VIDEO_SUB] = TRUE;     /* Whether to enable local SD video stream */
-    ipc_sdk_run_var.media_info.media_info.video_fps[E_IPC_STREAM_VIDEO_SUB] = 30;  /* FPS */
-    ipc_sdk_run_var.media_info.media_info.video_gop[E_IPC_STREAM_VIDEO_SUB] = 30;  /* GOP */
+    ipc_sdk_run_var.media_info.media_info.video_fps[E_IPC_STREAM_VIDEO_SUB] = 15;  /* FPS */
+    ipc_sdk_run_var.media_info.media_info.video_gop[E_IPC_STREAM_VIDEO_SUB] = 15;  /* GOP */
     ipc_sdk_run_var.media_info.media_info.video_bitrate[E_IPC_STREAM_VIDEO_SUB] = TUYA_VIDEO_BITRATE_512K; /* Rate limit */
     ipc_sdk_run_var.media_info.media_info.video_width[E_IPC_STREAM_VIDEO_SUB] = 640; /* Single frame resolution of width */
     ipc_sdk_run_var.media_info.media_info.video_height[E_IPC_STREAM_VIDEO_SUB] = 360;/* Single frame resolution of height */
@@ -489,7 +489,7 @@ int main(int argc, char *argv[])
     signal(SIGTERM, signal_handle);
     signal(SIGPIPE, SIG_IGN);
 
-    strcpy(s_raw_path, "/tmp"); //Path where demo resources locates
+    strcpy(s_raw_path, "/mntssd1/tuya"); //Path where demo resources locates
 #ifdef __HuaweiLite__
     if(argc != 2)
     {

@@ -16,9 +16,9 @@
 extern "C" {
 #endif
 
-#define IPC_APP_STORAGE_PATH    "/tmp/"   //Path to save tuya sdk DB files, should be readable, writeable and storable
-#define IPC_APP_UPGRADE_FILE    "/tmp/upgrade.file" //File with path to download file during OTA
-#define IPC_APP_SD_BASE_PATH    "/tmp/"      //SD card mount directory
+#define IPC_APP_STORAGE_PATH    "/mntssd1/tuya/"   //Path to save tuya sdk DB files, should be readable, writeable and storable
+#define IPC_APP_UPGRADE_FILE    "/mntssd1/tuya/upgrade.file" //File with path to download file during OTA
+#define IPC_APP_SD_BASE_PATH    "/mntssd1/tuya/"      //SD card mount directory
 #define IPC_APP_VERSION         "1.2.3"     //Firmware version displayed on TUYA APP
 
 #define IPC_APP_PID             "tuya_pid"      //Product ID of TUYA device, this is for demo only.

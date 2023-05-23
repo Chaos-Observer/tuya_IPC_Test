@@ -12,7 +12,7 @@ SDK_DIR = sdk
 
 LINKFLAGS = \
 	-L$(ROOT_DIR)/$(SDK_DIR)/lib -ltuya_iot -lpthread -lrt -ldl -lm \
-	-L/usr/lib/aarch64-linux-gnu/gstreamer-1.0 -lgstreamer-1.0 -lgstcoreelements -lgstapp -lgstrockchipmpp -lgstvideo4linux2 -lgstalsa -lgstvideorate -lgstvideoscale \
+	-L/usr/lib/aarch64-linux-gnu/gstreamer-1.0 -lgstreamer-1.0 -lgstcoreelements -lgstapp -lgstvideo4linux2 -lgstalsa -lgstvideorate -lgstvideoscale \
 	-L/usr/lib/aarch64-linux-gnu/glib-2.0/lib -lgobject-2.0 -lglib-2.0 -Wl,--gc-sections
 	
 CCFLAGS = \

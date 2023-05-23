@@ -1,0 +1,1 @@
+./script/setup_wifi.sh

@@ -1,2 +1,4 @@
 sdk/x86
 sdk/aarch64
+output
+log_seq_stat

@@ -75,7 +75,7 @@ static GstFlowReturn video_new_sample_cb(GstElement *sink, gpointer user_data){
             printf ("appsink buffer data empty\n");
             return GST_FLOW_OK;
         }
-        printf("video rx map.date is %02X %02X %02X %02X %02X %02X. map.size is %d, map.maxsize is %d.\n", map.data[0], map.data[1], map.data[2], map.data[3], map.data[4], map.data[5], map.size, map.maxsize);
+        // printf("video rx map.date is %02X %02X %02X %02X %02X %02X. map.size is %d, map.maxsize is %d.\n", map.data[0], map.data[1], map.data[2], map.data[3], map.data[4], map.data[5], map.size, map.maxsize);
         // read_one_frame_from_map(map.data, offset, map.size, &IsKeyFrame, &FrameLen, &Frame_start);
 
         unsigned char NalType = map.data[4] & 0x1f;
@@ -91,7 +91,7 @@ static GstFlowReturn video_new_sample_cb(GstElement *sink, gpointer user_data){
         }
 
         h264_frame.size = map.size;
-        int frameRate = 30;
+        int frameRate = 15;
         video_pts += 1000000/frameRate;
         // printf ("this frame start is %d\n",Frame_start);
         h264_frame.p_buf = map.data + Frame_start;
@@ -164,7 +164,7 @@ static GstFlowReturn audio_new_sample_cb(GstElement *sink, gpointer user_data){
             printf ("appsink buffer data empty\n");
             return GST_FLOW_OK;
         }
-        printf("audio rx map.date is %d %d %d %d %d %d. map.size is %d, map.maxsize is %d .\n", map.data[0], map.data[1], map.data[2], map.data[3], map.data[4], map.data[5], map.size, map.maxsize);
+        // printf("audio rx map.date is %d %d %d %d %d %d. map.size is %d, map.maxsize is %d .\n", map.data[0], map.data[1], map.data[2], map.data[3], map.data[4], map.data[5], map.size, map.maxsize);
 
         pcm_frame.type = E_AUDIO_FRAME;
         pcm_frame.size = map.size;
@@ -324,12 +324,12 @@ int *gst_media_pipeline_video()
     video_loop = g_main_loop_new (NULL, FALSE);
 
 /* Create the elements */
-    device_name = g_strdup ("usb-Sonix_Technology_Co.__Ltd._USB_2.0_Camera_SN0001-video-index0");
-    caps = g_strdup ("video/x-raw,width=640,height=360,framerate=30/1");
+    device_name = g_strdup ("platform-70090000.xusb-usb-0:1.1:1.3-video-index0");
+    caps = g_strdup ("video/x-raw,width=640,height=360,framerate=15/1");
 
     string =
       g_strdup_printf
-      ("v4l2src device=/dev/v4l/by-id/%s ! videorate ! capsfilter caps=\"video/x-raw,width=1280,height=720,framerate=30/1\" ! videoscale ! capsfilter caps=\"%s\" ! mpph264enc header-mode=each-idr rc-mode=0 bps-max=512000 gop=30 ! capsfilter caps=\"video/x-h264, stream-format=byte-stream\" ! appsink name=h264_sink",
+      ("v4l2src device=/dev/v4l/by-path/%s ! videoconvert ! videorate ! capsfilter caps=\"video/x-raw,width=1280,height=720,framerate=15/1\" ! videoscale ! capsfilter caps=\"%s\" ! omxh264enc insert-sps-pps=true peak-bitrate=512000 ! capsfilter caps=\"video/x-h264, stream-format=byte-stream\" ! appsink name=h264_sink",
       device_name, caps);
 
     pipeline = gst_parse_launch (string, NULL);
@@ -402,7 +402,7 @@ int *gst_media_pipeline_audio()
     audio_loop = g_main_loop_new (NULL, FALSE);
 
 /* Create the elements */
-    device_name = g_strdup ("hw:Camera,0");
+    device_name = g_strdup ("hw:tegrasndt210ref,0");
     caps = g_strdup ("audio/x-raw,format=S16LE,rate=8000,channels=1");
 
     string =

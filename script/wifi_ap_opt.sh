@@ -97,18 +97,19 @@ sudo ifconfig $wifi_dev down
 sudo iwconfig $wifi_dev mode master
 sudo ifconfig $wifi_dev up
 sudo hostapd -B /etc/hostapd/hostapd.conf
-sudo ifconfig $wifi_dev 192.168.175.1
+sudo ifconfig $wifi_dev 192.168.175.1/24
 
 }
 
 
 wifi_ap_stop()
 {
-
-
 sudo killall -9 udhcpd
 sudo killall -9 hostapd
-sudo ifconfig $wifi_dev down
+sudo ip addr del 192.168.175.1/24 dev $wifi_dev
+sudo ip addr flush $wifi_dev
+
+# sudo ifconfig $wifi_dev down
 # ps -ef | grep hostapd | grep -v grep | awk '{print $1}' | xargs sudo kill -9
 
 echo "stop AP..."
